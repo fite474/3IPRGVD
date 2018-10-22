@@ -1,5 +1,5 @@
-﻿using ClientApp.Bike;
-using ClientApp.Gui;
+﻿using PatientApp.Bike;
+using PatientApp.Gui;
 using PatientApp.Bike;
 using SharedData.Data;
 using System;
@@ -25,6 +25,9 @@ namespace PatientApp
         {
 
             BikeConnection bikeConnection = new BikeConnection();
+
+
+
             PatientTestStart patientGui = new PatientTestStart(bikeConnection);
             Application.EnableVisualStyles();
             Application.Run(patientGui);
@@ -32,7 +35,7 @@ namespace PatientApp
         }
 
 
-      
+
 
 
 

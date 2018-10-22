@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientApp.Gui
+namespace PatientApp.Gui
 {
     public partial class PatientTestInstructions : Form
     {

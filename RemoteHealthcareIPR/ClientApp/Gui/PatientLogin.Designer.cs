@@ -1,4 +1,4 @@
-﻿namespace ClientApp.Gui
+﻿namespace PatientApp.Gui
 {
     partial class PatientLogin
     {

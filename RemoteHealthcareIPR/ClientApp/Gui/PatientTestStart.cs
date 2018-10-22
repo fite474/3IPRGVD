@@ -1,4 +1,4 @@
-﻿using ClientApp.Bike;
+﻿using PatientApp.Bike;
 using PatientApp;
 using PatientApp.Bike;
 using System;
@@ -12,12 +12,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClientApp.Gui
+namespace PatientApp.Gui
 {
     public partial class PatientTestStart : Form
     {
         private BikeConnection bikeConnection;
-
+        public string Age { get; set; }
+        public string Weight { get; set; }
 
         public PatientTestStart(BikeConnection bikeConnection)
         {
@@ -34,7 +35,20 @@ namespace ClientApp.Gui
 
         private void startTestButton_Click(object sender, EventArgs e)
         {
+            bikeConnection.Age = Age;
+            bikeConnection.Weight = Weight;
+
             new Thread(bikeConnection.RunBikeLoop).Start();
+        }
+
+        private void ageTextbox_TextChanged(object sender, EventArgs e)
+        {
+            Age = ageTextbox.Text;
+        }
+
+        private void weightTextbox_TextChanged(object sender, EventArgs e)
+        {
+            Weight = weightTextbox.Text;
         }
     }
 }
