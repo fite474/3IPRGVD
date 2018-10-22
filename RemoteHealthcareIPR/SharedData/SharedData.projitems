@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1a7d6113-a054-4957-9ba9-62ce4eef537f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SharedData</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Cryptography\Crypto.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\PatientData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\DoctorData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IUserData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\ServerData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Session.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\SessionSnapshot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\FileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IdHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\TcpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\Datagram.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\DataType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\IJsonData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonAllClientData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonLogin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonLogOut.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonNewClientData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonNewClientSnapshot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonRequestNewClientData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Json\JsonResponse.cs" />
+  </ItemGroup>
+</Project>
