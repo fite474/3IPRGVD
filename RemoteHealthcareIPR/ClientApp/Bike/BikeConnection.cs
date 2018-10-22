@@ -23,6 +23,8 @@ namespace PatientApp.Bike
         public string Age { get; set; }
         public string Weight { get; set; }
         public string Gender { get; set; }
+        private int power;
+        private int heartbeat = 0;
 
         public BikeConnection()
         {
@@ -69,28 +71,34 @@ namespace PatientApp.Bike
 
         public void RunBikeLoop(object o)
         {
-            
+            power = 40;
 
             while (timeMinutes >= 5)
             {
-                CycleRun(RandomNumber(60, 80), 40, ConvertTimeToString(timeMinutes, timeSeconds));
+                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
             while (timeMinutes >= 1)
             {
-                CycleRun(RandomNumber(80, 140), 120, ConvertTimeToString(timeMinutes, timeSeconds));
+                if (heartbeat < 110)
+                { power += 5; }
+                else if (heartbeat > 150)
+                { power -= 5; }
+
+                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
             while (timeMinutes >= 0)
             {
-                CycleRun(RandomNumber(60, 120), 60, ConvertTimeToString(timeMinutes, timeSeconds));
+                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
         }
 
-        public void CycleRun(int heartbeat, int currentPower, string time)
+        public void CycleRun(int currentPower, string time)//int heartbeat, int currentPower, string time)
         {
+            SessionSnapshot currentBikeData = bikeTask.GetBikeData();
             bool secondsIsZero = timeSeconds == 0;
-            Console.WriteLine(Age);
-            Console.WriteLine(Weight);
-            Console.WriteLine("Heartbeat: " + heartbeat + ", currentPower: " + currentPower + ", Time: " + time);
+
+            heartbeat = currentBikeData.HeartRate;
+
             if (timeMinutes < 2)
             {
                 if (timeSeconds % 15 == 0)
