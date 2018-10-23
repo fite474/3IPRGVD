@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="ServerProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimulatedPatient.cs" />
     <Compile Include="Tasks\PatientTask.cs" />
     <Compile Include="Tasks\DoctorTask.cs" />
     <Compile Include="Tasks\TcpTask.cs" />

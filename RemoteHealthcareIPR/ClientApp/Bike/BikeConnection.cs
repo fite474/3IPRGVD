@@ -1,4 +1,5 @@
-﻿using PatientApp.Bike;
+﻿using ClientServerUtil;
+using PatientApp.Bike;
 using PatientApp.Gui;
 using SharedData.Data;
 using System;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +17,15 @@ namespace PatientApp.Bike
 {
     public class BikeConnection
     {
+        public delegate void ReceiveResponse(SessionSnapshot jsonResponse);
+
+
+        private static TcpClient Client;
+        Thread ReadThread;
+        Thread SendThread;
+        NetworkStream stream;
+        public event ReceiveResponse OnReceiveResponse;
+
         private BikeTask bikeTask = new BikeTask();
         private long loopInterval = 1000; //In milliseconds
         private int timeMinutes = 7;
@@ -81,6 +93,8 @@ namespace PatientApp.Bike
 
         public void RunBikeLoop(object o)
         {
+            connect();
+
             SetMaxHF(Age);
 
 
@@ -149,6 +163,7 @@ namespace PatientApp.Bike
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
                     //Session.SessionSnapshots.Add(ss);
+                    
                 }
             }
 
@@ -216,5 +231,24 @@ namespace PatientApp.Bike
             { patientTestInstructions.setInstructionLabel("goed bezig, houd dit tempo aan"); }
         }
 
+        private void connect()
+        {
+            byte[] data = new byte[1024];
+            Client = new TcpClient(IPAddress.Loopback.ToString(), 667);
+            stream = Client.GetStream();
+            //byte[] messageBytes = Util.BuildJSON(data);
+        }
+
+        private void ResponseHandler(SessionSnapshot jsonResponse)
+        {
+            Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
+        }
+
+        private void Send(SessionSnapshot sessionSnapshot)
+        {
+            byte[] data = new byte[1024];
+            byte[] messageBytes = Util.BuildJSON(sessionSnapshot);
+            stream.Write(messageBytes, 0, messageBytes.Length);
+        }
     }
 }
