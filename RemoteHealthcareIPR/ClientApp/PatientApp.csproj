@@ -84,6 +84,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Gui\PatientTestInstructions.resx">
+      <DependentUpon>PatientTestInstructions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Gui\PatientTestStart.resx">
       <DependentUpon>PatientTestStart.cs</DependentUpon>
     </EmbeddedResource>

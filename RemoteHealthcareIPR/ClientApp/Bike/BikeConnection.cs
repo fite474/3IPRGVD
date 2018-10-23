@@ -25,6 +25,10 @@ namespace PatientApp.Bike
         public string Gender { get; set; }
         private int power;
         private int heartbeat = 0;
+        private double maxHeartFrequentie = 200.0;
+        private int roundsPerMin = 0;
+        public string CurrentTimeString { get; set; }
+        PatientTestInstructions patientTestInstructions = new PatientTestInstructions();
 
         public BikeConnection()
         {
@@ -69,19 +73,33 @@ namespace PatientApp.Bike
             }
         }
 
+        public void RunTestGUI(object o)
+        {
+            //patientTestInstructions = new PatientTestInstructions();
+            patientTestInstructions.ShowDialog();
+        }
+
         public void RunBikeLoop(object o)
         {
+            SetMaxHF(Age);
+
+
+
             power = 40;
 
             while (timeMinutes >= 5)
             {
+                if (roundsPerMin < 50)
+                { power -= 5; }
+                if (roundsPerMin > 60)
+                { power += 5; }
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
             while (timeMinutes >= 1)
             {
-                if (heartbeat < 110)
+                if (heartbeat < 130)
                 { power += 5; }
-                else if (heartbeat > 150)
+                else if (heartbeat > maxHeartFrequentie)
                 { power -= 5; }
 
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
@@ -96,8 +114,9 @@ namespace PatientApp.Bike
         {
             SessionSnapshot currentBikeData = bikeTask.GetBikeData();
             bool secondsIsZero = timeSeconds == 0;
-
+            bikeTask.IncreasePower(currentPower);
             heartbeat = currentBikeData.HeartRate;
+            roundsPerMin = currentBikeData.Rpm;
 
             if (timeMinutes < 2)
             {
@@ -107,10 +126,13 @@ namespace PatientApp.Bike
                     ss.CurrentPower = currentPower;
                     ss.Time = time;
                     ss.HeartRate = heartbeat;
-                    ss.Rpm = 40;
-                    ss.Speed = 30;
-                    ss.Distance = 31;
-                    ss.Energy = 900;
+                    ss.Rpm = currentBikeData.Rpm;
+                    ss.Speed = currentBikeData.Speed;
+                    ss.Distance = currentBikeData.Distance;
+                    ss.Energy = currentBikeData.Energy;
+
+                    //maak gemiddelde van heartbeat
+
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
@@ -122,10 +144,10 @@ namespace PatientApp.Bike
                     ss.CurrentPower = currentPower;
                     ss.Time = time;
                     ss.HeartRate = heartbeat;
-                    ss.Rpm = 40;
-                    ss.Speed = 30;
-                    ss.Distance = 31;
-                    ss.Energy = 900;
+                    ss.Rpm = currentBikeData.Rpm;
+                    ss.Speed = currentBikeData.Speed;
+                    ss.Distance = currentBikeData.Distance;
+                    ss.Energy = currentBikeData.Energy;
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
@@ -137,12 +159,20 @@ namespace PatientApp.Bike
             }
             else timeSeconds--;
 
+            if (heartbeat > maxHeartFrequentie)
+            {
+                //stop programma
+            }
+            setInstructions(roundsPerMin);
             Thread.Sleep(speed);
+
         }
 
         public string ConvertTimeToString(int minutes, int seconds)
         {
-            return minutes.ToString("00") + ":" + seconds.ToString("00");
+            CurrentTimeString = minutes.ToString("00") + ":" + seconds.ToString("00");
+            patientTestInstructions.setTimeLabel(CurrentTimeString);
+            return CurrentTimeString;
         }
 
         public int RandomNumber(int min, int max)
@@ -151,50 +181,40 @@ namespace PatientApp.Bike
             return random.Next(min, max);
         }
 
+        private void SetMaxHF(string age)
+        {
+            double localAge = int.Parse(age);
+            double hfFactor = 1.0;
+            if (localAge < 25)
+            { hfFactor = 1.12; }
 
+            if ( 40 > localAge && localAge > 35)
+            { hfFactor = 0.93; }
 
+            if (45 > localAge && localAge > 40)
+            { hfFactor = 0.83; }
 
+            if (50 > localAge && localAge > 45)
+            { hfFactor = 0.75; }
 
+            if (55 > localAge && localAge > 50)
+            { hfFactor = 0.69; }
 
+            if (40 > localAge && localAge > 55)
+            { hfFactor = 0.64; }
 
+            maxHeartFrequentie = maxHeartFrequentie * hfFactor;
+        }
 
+        private void setInstructions(int rpm)
+        {
+            if (rpm < 50)
+            { patientTestInstructions.setInstructionLabel("fiets sneller"); }
+            else if (rpm > 65)
+            { patientTestInstructions.setInstructionLabel("fiets rustiger"); }
+            else
+            { patientTestInstructions.setInstructionLabel("goed bezig, houd dit tempo aan"); }
+        }
 
-
-
-        ////Session session = new Session();
-        //AvansAstrandTest avansAstrandTest = new AvansAstrandTest();
-
-        //    SessionSnapshot currentBikeData;
-        //    bool isSessionRunning = true;
-
-        //    long startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-        //    while (isSessionRunning)
-        //    {
-        //        long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
-        //        if (currentTime - startTime >= loopInterval)
-        //        {
-        //            startTime = currentTime;
-
-        //            currentBikeData = bikeTask.GetBikeData();
-        //            SessionSnapshot snapshot = new SessionSnapshot
-        //            {
-        //                Speed = currentBikeData.Speed,
-        //                Distance = currentBikeData.Distance,
-        //                Energy = currentBikeData.Energy,
-        //                HeartRate = currentBikeData.HeartRate,
-        //                CurrentPower = currentBikeData.CurrentPower,
-        //                DateTime = DateTime.Now,
-        //                Power = currentBikeData.Power,
-        //                Rpm = currentBikeData.Rpm
-        //            };
-
-        //            Console.WriteLine(snapshot);
-
-        //        }
-        //    }
-
-        //}
     }
 }

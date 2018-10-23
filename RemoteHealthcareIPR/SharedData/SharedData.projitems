@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\FileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IdHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\TcpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ThreadExtention.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\Datagram.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\DataType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\IJsonData.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharedData.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+
 namespace PatientApp.Gui
 {
     public partial class PatientTestInstructions : Form
@@ -15,6 +18,21 @@ namespace PatientApp.Gui
         public PatientTestInstructions()
         {
             InitializeComponent();
+        }
+
+        public void setTimeLabel(string time) {
+            this.ActionInvoke(() =>
+            {
+                timeLabel.Text = time;
+            });
+        }
+
+        public void setInstructionLabel(string instructions)
+        {
+            this.ActionInvoke(() =>
+            {
+                instructionLabelRPM.Text = instructions;
+            });
         }
     }
 }

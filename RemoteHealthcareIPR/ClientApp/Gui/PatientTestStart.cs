@@ -20,11 +20,13 @@ namespace PatientApp.Gui
         public string Age { get; set; }
         public string Weight { get; set; }
 
+
         public PatientTestStart(BikeConnection bikeConnection)
         {
             InitializeComponent();
             this.bikeConnection = bikeConnection;
             bikeConnection.FindBike();
+            
         }
 
 
@@ -38,7 +40,10 @@ namespace PatientApp.Gui
             bikeConnection.Age = Age;
             bikeConnection.Weight = Weight;
 
+            new Thread(bikeConnection.RunTestGUI).Start();
             new Thread(bikeConnection.RunBikeLoop).Start();
+            
+            
         }
 
         private void ageTextbox_TextChanged(object sender, EventArgs e)

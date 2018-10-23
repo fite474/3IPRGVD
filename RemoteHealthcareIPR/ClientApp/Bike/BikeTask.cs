@@ -89,8 +89,8 @@ namespace PatientApp.Bike
         {
             lock (bikeLockObject)
             {
-                currentData = bike.ReadData();
-                bike.PutPower(currentData.Power + power);
+                //currentData = bike.ReadData();
+                bike.PutPower(power);
             }
         }
 
