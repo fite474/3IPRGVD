@@ -16,8 +16,8 @@ namespace DoctorApp
         
         public DoctorProgram()
         {
-            AskDataFromClient adfc = new AskDataFromClient();
-            Console.ReadKey();
+            DocForm form = new DocForm();
+            form.ShowDialog();
         }
     }
 }

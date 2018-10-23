@@ -13,6 +13,9 @@ namespace ServerApp
 {
     class ServerProgram
     {
+        bool doc = true;
+        TcpClient client;
+        TcpClient doctor;
         public static void Main(string[] args)
         {
             new ServerProgram();
@@ -36,6 +39,7 @@ namespace ServerApp
                 server.Start();
                 while (true)
                 {
+
                     server.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
                     allDone.WaitOne();
                     Console.WriteLine("Client has connected");
@@ -49,9 +53,18 @@ namespace ServerApp
 
         private void OnConnect(IAsyncResult ar)
         {
-            TcpClient client = server.EndAcceptTcpClient(ar);
-            TypeCheckTask check = new TypeCheckTask(client, currentUsers, serverData);
-            allDone.Set();
+            if (doc == true)
+            {
+                doctor = server.EndAcceptTcpClient(ar);
+                TypeCheckTask check = new TypeCheckTask(doc, currentUsers, serverData);
+                allDone.Set();
+            }
+            else {
+                client = server.EndAcceptTcpClient(ar);
+                TypeCheckTask check = new TypeCheckTask(client, currentUsers, serverData);
+                allDone.Set();
+            }
+            doc = false;
         }
     }
 }
