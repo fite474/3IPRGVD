@@ -95,13 +95,12 @@ namespace PatientApp.Bike
             connection = new ServerConnection(false);
             connection.OnReceiveResponse += handleResponse;
             patientTestInstructions = new PatientTestInstructions();
-            new Thread(UIStart).Start();
             //patientTestInstructions.ShowDialog();
         }
 
         public void RunBikeLoop(object o)
         {
-            connect();
+            //connect();
             heartbeatList = new List<int>();
             SetMaxHF(Age);
 
@@ -160,6 +159,7 @@ namespace PatientApp.Bike
                     ss.Energy = currentBikeData.Energy;
                     //maak gemiddelde van heartbeat
                     MakeAvarageHeartbeat(heartbeat);
+                    SendSnap(ss);
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
@@ -175,6 +175,7 @@ namespace PatientApp.Bike
                     ss.Speed = currentBikeData.Speed;
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
+                    SendSnap(ss);
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
@@ -197,6 +198,13 @@ namespace PatientApp.Bike
 
         }
 
+        private void SendSnap(SessionSnapshot snap)
+        {
+            Datagram datagram = new Datagram();
+            datagram.DataType = DataType.SessionSnapshot;
+            datagram.Data = snap;
+            connection.SendData(datagram);
+        }
         public string ConvertTimeToString(int minutes, int seconds)
         {
             CurrentTimeString = minutes.ToString("00") + ":" + seconds.ToString("00");
