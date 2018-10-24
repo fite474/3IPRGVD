@@ -84,10 +84,12 @@ namespace ServerApp
                         }
                     case DataType.ImClient:
                         {
+                            client = tcp;
                             break;
                         }
                     case DataType.ImDoc:
                         {
+                            doctor = tcp;
                             break;
                         }
                 }
