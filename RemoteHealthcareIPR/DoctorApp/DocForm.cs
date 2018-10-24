@@ -1,4 +1,6 @@
-﻿using SharedData.Data;
+﻿using ClientServerUtil;
+using Newtonsoft.Json;
+using SharedData.Data;
 using SharedData.Json;
 using System;
 using System.Collections.Generic;
@@ -34,9 +36,16 @@ namespace DoctorApp
 
         }
 
-        public void handleResponse(Datagram snap)
+        public void handleResponse(Datagram receivedData)
         {
-            //setDataInUI
+            switch (receivedData.DataType)
+            {
+                case DataType.SessionSnapshot:
+                    {
+                        setDoctorValues(receivedData.Data);
+                        break;
+                    }
+            }
         }
 
         private void DocForm_Load(object sender, EventArgs e)
