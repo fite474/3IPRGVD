@@ -44,8 +44,9 @@ namespace ServerApp
                 {
                     TcpClient tcpClient = server.AcceptTcpClient();
                     Task receiveServerData = new Task(() => ReceiveServerData(tcpClient));
+                    receiveServerData.Start();
                     //server.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-                    //allDone.WaitOne();♦
+                    //allDone.WaitOne();
                     //Console.WriteLine("Client has connected");
                 }
             }
@@ -66,8 +67,9 @@ namespace ServerApp
         {
             while (true)
             {
+                Console.WriteLine("??????????????????????????????????????????????????????");
                 Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(tcp));
-                Console.WriteLine(receivedData);
+                Console.WriteLine(receivedData.DataType);
             }
         }
     }
