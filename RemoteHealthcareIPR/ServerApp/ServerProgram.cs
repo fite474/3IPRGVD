@@ -58,9 +58,9 @@ namespace ServerApp
 
         private void OnConnect(IAsyncResult ar)
         {
-                //doctor = server.EndAcceptTcpClient(ar);
-                //TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
-                //allDone.Set();
+            //doctor = server.EndAcceptTcpClient(ar);
+            //TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
+            //allDone.Set();
         }
 
         private void ReceiveServerData(TcpClient tcp)
@@ -70,7 +70,32 @@ namespace ServerApp
                 Console.WriteLine("??????????????????????????????????????????????????????");
                 Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(tcp));
                 Console.WriteLine(receivedData.DataType);
+
+                switch (receivedData.DataType)
+                {
+                    case DataType.StartSession:
+                        {
+
+
+
+                            break;
+                        }
+                    case DataType.SessionSnapshot:
+                        {
+
+
+                            break;
+
+                        }
+
+
+                }
             }
+        }
+
+        public void SendToDoctor(Datagram request)
+        {
+            Network.SendDatagram(request);
         }
     }
 }
