@@ -94,13 +94,14 @@ namespace PatientApp.Bike
         {
             connection = new ServerConnection(false);
             connection.OnReceiveResponse += handleResponse;
-            //patientTestInstructions = new PatientTestInstructions();
+            patientTestInstructions = new PatientTestInstructions();
+            new Thread(UIStart).Start();
             //patientTestInstructions.ShowDialog();
         }
 
         public void RunBikeLoop(object o)
         {
-            //connect();
+            connect();
             heartbeatList = new List<int>();
             SetMaxHF(Age);
 
@@ -268,13 +269,26 @@ namespace PatientApp.Bike
             Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
         }
 
-        public void handleResponse(Datagram snap)
+        public void handleResponse(Datagram data)
         {
-            //recievedata and start if correct
-            //patientTestInstructions = new PatientTestInstructions();
-            //patientTestInstructions.ShowDialog();
-            //new Thread(RunBikeLoop).Start();
+            switch (data.DataType)
+            {
+                case DataType.StartSession:
+                    {
+                        new Thread(UIStart).Start();
+                        new Thread(RunBikeLoop).Start();
+                        break;
+                    }
 
+                    //recievedata and start if correct
+
+
+            }
+        }
+
+        private void UIStart(object o)
+        {
+            patientTestInstructions.ShowDialog();
         }
 
         private void MakeAvarageHeartbeat(int heartbeat)
