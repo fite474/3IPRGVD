@@ -42,6 +42,7 @@
             this.timeLabel.Size = new System.Drawing.Size(35, 13);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "label1";
+            this.timeLabel.Click += new System.EventHandler(this.timeLabel_Click);
             // 
             // instructionLabelRPM
             // 

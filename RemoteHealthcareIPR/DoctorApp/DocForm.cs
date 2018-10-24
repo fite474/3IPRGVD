@@ -1,3 +1,4 @@
+using SharedData.Helpers;
 ﻿using ClientServerUtil;
 using Newtonsoft.Json;
 using SharedData.Data;
@@ -63,6 +64,27 @@ namespace DoctorApp
         private void ResponseHandler(Datagram jsonResponse)
         {
             Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
+        }
+
+        private void setDoctorValues(dynamic data)
+        {
+            int xAs = 0;
+            int rpm = data.Rpm;
+            int heartbeat = data.HeartRate;
+            this.ActionInvoke(() =>
+            {
+                rpmLabel.Text = ("rpm: " + rpm);
+                hearthbeatLabel.Text = ("heart rate: " + heartbeat);
+
+                chart1.Series["rpm"].Points.AddXY(xAs, rpm);
+                chart1.Series["heartbeat"].Points.AddXY(xAs, heartbeat);
+            });
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
