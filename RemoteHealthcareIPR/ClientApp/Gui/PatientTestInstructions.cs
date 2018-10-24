@@ -53,6 +53,14 @@ namespace PatientApp.Gui
             });
         }
 
+        public void setPower(string currentHeartbeat)
+        {
+            this.ActionInvoke(() =>
+            {
+                label1.Text = currentHeartbeat;
+            });
+        }
+
         private void PatientTestInstructions_Load(object sender, EventArgs e)
         {
 
@@ -69,6 +77,11 @@ namespace PatientApp.Gui
         }
 
         private void timeLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }

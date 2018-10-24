@@ -40,7 +40,8 @@ namespace PatientApp.Gui
         {
             bikeConnection.Age = Age;
             bikeConnection.Weight = Weight;
-
+            this.Hide();
+            
             new Thread(bikeConnection.RunTestGUI).Start();
             
             

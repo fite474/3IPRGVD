@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PatientApp.Bike
 {
@@ -92,11 +93,15 @@ namespace PatientApp.Bike
 
         public void RunTestGUI(object o)
         {
+            
+            
             connection = new ServerConnection(false);
             connection.OnReceiveResponse += ResponseHandler;
             OnReceiveResponse += handleResponse;
             patientTestInstructions = new PatientTestInstructions();
             //patientTestInstructions.ShowDialog();
+            string text = "Wacht tot de dokter de sessie start!";
+            MessageBox.Show(text);
         }
 
         public void RunBikeLoop(object o)
@@ -108,6 +113,7 @@ namespace PatientApp.Bike
 
 
             power = 40;
+            patientTestInstructions.setPower("current Power is: " + power + "Watt");
             setPhase("warming up");
             while (timeMinutes >= 5)
             {
@@ -121,9 +127,14 @@ namespace PatientApp.Bike
             while (timeMinutes >= 1)
             {
                 if (heartbeat < 130)
-                { power += 5; }
+                { power += 5;
+                    patientTestInstructions.setPower("current Power is: " + power + "Watt");
+
+                }
                 else if (heartbeat > maxHeartFrequentie)
-                { power -= 5; }
+                { power -= 5;
+                    patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                }
 
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
