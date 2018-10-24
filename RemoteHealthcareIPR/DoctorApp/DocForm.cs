@@ -1,4 +1,5 @@
 ﻿using SharedData.Data;
+using SharedData.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,12 +14,13 @@ namespace DoctorApp
 {
     public partial class DocForm : Form
     {
-        bool first = false;
+        bool doc = true;
+        ServerConnection connection;
 
         public DocForm()
         {
             InitializeComponent();
-            ServerConnection connection = new ServerConnection();
+            connection = new ServerConnection(doc);
             connection.OnReceiveResponse += handleResponse;
         }
 
@@ -27,7 +29,7 @@ namespace DoctorApp
 
         }
 
-        public void handleResponse(SessionSnapshot snap)
+        public void handleResponse(Datagram snap)
         {
             //setDataInUI
         }
@@ -39,7 +41,9 @@ namespace DoctorApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            Datagram datagram = new Datagram();
+            datagram.DataType = DataType.StartSession;
+            connection.SendData(datagram);
         }
     }
 }

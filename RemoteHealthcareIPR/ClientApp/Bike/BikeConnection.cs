@@ -3,6 +3,7 @@ using DoctorApp;
 using PatientApp.Bike;
 using PatientApp.Gui;
 using SharedData.Data;
+using SharedData.Json;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -18,7 +19,7 @@ namespace PatientApp.Bike
 {
     public class BikeConnection
     {
-        public delegate void ReceiveResponse(SessionSnapshot jsonResponse);
+        public delegate void ReceiveResponse(Datagram jsonResponse);
 
 
         private static TcpClient Client;
@@ -89,7 +90,7 @@ namespace PatientApp.Bike
 
         public void RunTestGUI(object o)
         {
-            connection = new ServerConnection();
+            connection = new ServerConnection(false);
             connection.OnReceiveResponse += handleResponse;
             //patientTestInstructions = new PatientTestInstructions();
             //patientTestInstructions.ShowDialog();
@@ -242,12 +243,12 @@ namespace PatientApp.Bike
             //byte[] messageBytes = Util.BuildJSON(data);
         }
 
-        private void ResponseHandler(SessionSnapshot jsonResponse)
+        private void ResponseHandler(Datagram jsonResponse)
         {
             Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
         }
 
-        public void handleResponse(SessionSnapshot snap)
+        public void handleResponse(Datagram snap)
         {
             //recievedata and start if correct
             //patientTestInstructions = new PatientTestInstructions();

@@ -1,5 +1,8 @@
-﻿using ServerApp.Tasks;
+﻿using ClientServerUtil;
+using Newtonsoft.Json;
+using ServerApp.Tasks;
 using SharedData.Data;
+using SharedData.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,20 +56,18 @@ namespace ServerApp
 
         private void OnConnect(IAsyncResult ar)
         {
-            if (doc == true)
-            {
                 doctor = server.EndAcceptTcpClient(ar);
                 TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
                 allDone.Set();
-            }
+        }
 
-
-            else {
-                client = server.EndAcceptTcpClient(ar);
-                TypeCheckTask check = new TypeCheckTask(client, currentUsers, serverData);
-                allDone.Set();
+        private void RecieveServerData()
+        {
+            while (true)
+            {
+                Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(doctor));
+                Console.WriteLine(receivedData);
             }
-            doc = false;
         }
     }
 }

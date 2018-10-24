@@ -1,6 +1,7 @@
 ﻿using ClientServerUtil;
 using Newtonsoft.Json;
 using SharedData.Data;
+using SharedData.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DoctorApp
 {
-    public delegate void ReceiveResponse(SessionSnapshot jsonResponse);
+    public delegate void ReceiveResponse(Datagram jsonResponse);
 
     class ServerConnection
     {
@@ -23,12 +24,21 @@ namespace DoctorApp
         public event ReceiveResponse OnReceiveResponse;
 
 
-        public ServerConnection() { 
+        public ServerConnection(bool doc) { 
             byte[] data = new byte[1024];
             Client = new TcpClient(IPAddress.Loopback.ToString(), 667);
             stream = Client.GetStream();
-            //byte[] messageBytes = Util.BuildJSON(data);
-            //stream.Write(messageBytes, 0, messageBytes.Length);
+            Datagram datagram = new Datagram();
+            if (doc)
+            {
+                datagram.DataType = DataType.ImDoc;
+            }
+            else
+            {
+                datagram.DataType = DataType.ImClient;
+            }
+            byte[] messageBytes = Util.BuildJSON(datagram);
+            stream.Write(messageBytes, 0, messageBytes.Length);
         
         
             ReadThread = new Thread(RecieveServerData);
@@ -36,7 +46,7 @@ namespace DoctorApp
 
         }
 
-        private void SendData(SessionSnapshot snapshot)
+        public void SendData(Datagram snapshot)
         {
             byte[] messageBytes = Util.BuildJSON(snapshot);
             stream.Write(messageBytes, 0, messageBytes.Length);
@@ -46,11 +56,11 @@ namespace DoctorApp
         {
             while (true)
             {
-                SessionSnapshot receivedData = JsonConvert.DeserializeObject<SessionSnapshot>(Util.ReadMessage(Client));
+                Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(Client));
             }
         }
-
-        private void ResponseHandler(SessionSnapshot jsonResponse)
+            
+        private void ResponseHandler(Datagram jsonResponse)
         {
             Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
         }

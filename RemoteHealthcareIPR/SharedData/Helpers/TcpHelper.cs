@@ -97,7 +97,7 @@ namespace SharedData.Helpers
             String decryptedData = Crypto.Decrypt(data);
 
             Console.WriteLine("Decrypted: " + decryptedData);
-            dynamic jsonData = JsonConvert.DeserializeObject<Datagram>(decryptedData);
+            dynamic jsonData = JsonConvert.DeserializeObject<Datagram>(data);
             onCompletedEvent(jsonData);
         }
     }
