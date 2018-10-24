@@ -74,27 +74,38 @@ namespace ServerApp
                 {
                     case DataType.StartSession:
                         {
-
-
-
+                            SendDataToClient(receivedData);
                             break;
                         }
                     case DataType.SessionSnapshot:
                         {
-
-
+                            SendDataToDoc(receivedData);
                             break;
-
                         }
-
-
+                    case DataType.ImClient:
+                        {
+                            break;
+                        }
+                    case DataType.ImDoc:
+                        {
+                            break;
+                        }
                 }
             }
         }
 
-        public void SendToDoctor(Datagram request)
+        public void SendDataToDoc(Datagram snapshot)
         {
-            Network.SendDatagram(request);
+            byte[] messageBytes = Util.BuildJSON(snapshot);
+            doctor.GetStream().Write(messageBytes, 0, messageBytes.Length);
         }
+
+
+        public void SendDataToClient(Datagram snapshot)
+        {
+            byte[] messageBytes = Util.BuildJSON(snapshot);
+            client.GetStream().Write(messageBytes, 0, messageBytes.Length);
+        }
+
     }
 }
