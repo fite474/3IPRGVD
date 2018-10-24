@@ -16,12 +16,17 @@ namespace DoctorApp
     {
         bool doc = true;
         ServerConnection connection;
+        public delegate void ReceiveResponse(Datagram jsonResponse);
+        public event ReceiveResponse OnReceiveResponse;
+
+
 
         public DocForm()
         {
             InitializeComponent();
             connection = new ServerConnection(doc);
-            connection.OnReceiveResponse += handleResponse;
+            connection.OnReceiveResponse += ResponseHandler;
+            OnReceiveResponse += handleResponse;
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -44,6 +49,11 @@ namespace DoctorApp
             Datagram datagram = new Datagram();
             datagram.DataType = DataType.StartSession;
             connection.SendData(datagram);
+        }
+
+        private void ResponseHandler(Datagram jsonResponse)
+        {
+            Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
         }
     }
 }
