@@ -19,8 +19,6 @@ namespace PatientApp.Gui
     {
         public PatientTestInstructions()
         {
-            ServerConnection connection = new ServerConnection();
-            connection.OnReceiveResponse += handleResponse;
             InitializeComponent();
         }
 
@@ -44,9 +42,6 @@ namespace PatientApp.Gui
 
         }
 
-        public void handleResponse(SessionSnapshot snap)
-        {
-            //recievedata and start if correct
-        }
+
     }
 }

@@ -38,7 +38,8 @@ namespace DoctorApp
 
         private void SendData(SessionSnapshot snapshot)
         {
-            byte[] messageBytes = Ut
+            byte[] messageBytes = Util.BuildJSON(snapshot);
+            stream.Write(messageBytes, 0, messageBytes.Length);
         }
 
         private void RecieveServerData()

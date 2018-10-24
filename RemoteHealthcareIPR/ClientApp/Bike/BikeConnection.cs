@@ -1,4 +1,5 @@
 ﻿using ClientServerUtil;
+using DoctorApp;
 using PatientApp.Bike;
 using PatientApp.Gui;
 using SharedData.Data;
@@ -39,6 +40,7 @@ namespace PatientApp.Bike
         private int heartbeat = 0;
         private double maxHeartFrequentie = 200.0;
         private int roundsPerMin = 0;
+        private ServerConnection connection;
         public string CurrentTimeString { get; set; }
         PatientTestInstructions patientTestInstructions = new PatientTestInstructions();
 
@@ -87,9 +89,10 @@ namespace PatientApp.Bike
 
         public void RunTestGUI(object o)
         {
-
+            connection = new ServerConnection();
+            connection.OnReceiveResponse += handleResponse;
             //patientTestInstructions = new PatientTestInstructions();
-            patientTestInstructions.ShowDialog();
+            //patientTestInstructions.ShowDialog();
         }
 
         public void RunBikeLoop(object o)
@@ -164,7 +167,6 @@ namespace PatientApp.Bike
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
                     //Session.SessionSnapshots.Add(ss);
-                    
                 }
             }
 
@@ -245,11 +247,13 @@ namespace PatientApp.Bike
             Task.Run(() => OnReceiveResponse?.Invoke(jsonResponse));
         }
 
-        private void Send(SessionSnapshot sessionSnapshot)
+        public void handleResponse(SessionSnapshot snap)
         {
-            byte[] data = new byte[1024];
-            byte[] messageBytes = Util.BuildJSON(sessionSnapshot);
-            stream.Write(messageBytes, 0, messageBytes.Length);
+            //recievedata and start if correct
+            //patientTestInstructions = new PatientTestInstructions();
+            //patientTestInstructions.ShowDialog();
+            //new Thread(RunBikeLoop).Start();
+
         }
     }
 }
