@@ -93,7 +93,8 @@ namespace PatientApp.Bike
         public void RunTestGUI(object o)
         {
             connection = new ServerConnection(false);
-            connection.OnReceiveResponse += handleResponse;
+            connection.OnReceiveResponse += ResponseHandler;
+            OnReceiveResponse += handleResponse;
             patientTestInstructions = new PatientTestInstructions();
             //patientTestInstructions.ShowDialog();
         }

@@ -23,7 +23,6 @@ namespace DoctorApp
         NetworkStream stream;
         public event ReceiveResponse OnReceiveResponse;
 
-
         public ServerConnection(bool doc) { 
             byte[] data = new byte[1024];
             Client = new TcpClient(IPAddress.Loopback.ToString(), 667);
@@ -57,6 +56,7 @@ namespace DoctorApp
             while (true)
             {
                 Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(Client));
+                ResponseHandler(receivedData);
             }
         }
             
