@@ -32,6 +32,8 @@
             this.instructionLabelRPM = new System.Windows.Forms.Label();
             this.faseLabel = new System.Windows.Forms.Label();
             this.currentHearbeatLabel = new System.Windows.Forms.Label();
+            this.instrucitonsLabel = new System.Windows.Forms.Label();
+            this.steadyStateLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -78,6 +80,28 @@
             this.currentHearbeatLabel.Text = "label1";
             this.currentHearbeatLabel.Click += new System.EventHandler(this.currentHearbeatLabel_Click);
             // 
+            // instrucitonsLabel
+            // 
+            this.instrucitonsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrucitonsLabel.AutoSize = true;
+            this.instrucitonsLabel.Location = new System.Drawing.Point(343, 13);
+            this.instrucitonsLabel.Name = "instrucitonsLabel";
+            this.instrucitonsLabel.Size = new System.Drawing.Size(35, 13);
+            this.instrucitonsLabel.TabIndex = 4;
+            this.instrucitonsLabel.Text = "label1";
+            // 
+            // steadyStateLabel
+            // 
+            this.steadyStateLabel.AutoSize = true;
+            this.steadyStateLabel.Location = new System.Drawing.Point(266, 284);
+            this.steadyStateLabel.Name = "steadyStateLabel";
+            this.steadyStateLabel.Size = new System.Drawing.Size(35, 13);
+            this.steadyStateLabel.TabIndex = 5;
+            this.steadyStateLabel.Text = "label1";
+            this.steadyStateLabel.Visible = false;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -92,7 +116,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.steadyStateLabel);
+            this.Controls.Add(this.instrucitonsLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.currentHearbeatLabel);
             this.Controls.Add(this.faseLabel);
@@ -113,6 +139,8 @@
         private System.Windows.Forms.Label instructionLabelRPM;
         private System.Windows.Forms.Label faseLabel;
         private System.Windows.Forms.Label currentHearbeatLabel;
+        private System.Windows.Forms.Label instrucitonsLabel;
+        private System.Windows.Forms.Label steadyStateLabel;
         private System.Windows.Forms.Label label1;
     }
 }

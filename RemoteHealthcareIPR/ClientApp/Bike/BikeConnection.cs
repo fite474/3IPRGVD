@@ -159,6 +159,7 @@ namespace PatientApp.Bike
 
             if (timeMinutes < 2)
             {
+                patientTestInstructions.setHeartbeatLabelvisible();
                 if (timeSeconds % 15 == 0)
                 {
                     SessionSnapshot ss = new SessionSnapshot();
@@ -273,6 +274,8 @@ namespace PatientApp.Bike
 
             patientTestInstructions.setHeartbeatLabel("current heartbeat is: " + heartbeat + "RPM");
 
+            patientTestInstructions.setSteadyStateLabel(steadyState);
+
         }
 
 
@@ -327,7 +330,11 @@ namespace PatientApp.Bike
                 }
 
                 if ((maxValue - minValue) > 5)
-                { steadyState = false; }
+                {
+                    steadyState = false;
+                    
+
+                }
             }
         }
     }

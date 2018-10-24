@@ -20,6 +20,7 @@ namespace PatientApp.Gui
         public PatientTestInstructions()
         {
             InitializeComponent();
+            instrucitonsLabel.Text = "U gaat fietsen met een snelheid van ongeveer 60 omwentelingen per min.\n U krijgt eerst een korte warming-up van 2 min.\n Hierna wordt (eventueel in korte stappen) de beoogde testbelasting ingesteld.\n De test duurt 4 minuten met daarna een cooling down. ";
         }
 
         public void setTimeLabel(string time) {
@@ -50,6 +51,25 @@ namespace PatientApp.Gui
             this.ActionInvoke(() =>
             {
                 currentHearbeatLabel.Text = currentHeartbeat;
+            });
+        }
+
+        public void setSteadyStateLabel(bool state)
+        {
+            this.ActionInvoke(() =>
+            {
+                if (state)
+                { steadyStateLabel.Text = ("steady state: true"); }
+                else { steadyStateLabel.Text = ("steady state: false"); }
+                
+            });
+        }
+
+        public void setHeartbeatLabelvisible()
+        {
+            this.ActionInvoke(() =>
+            {
+                steadyStateLabel.Visible = true;
             });
         }
 
