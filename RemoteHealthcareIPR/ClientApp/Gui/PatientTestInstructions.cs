@@ -37,11 +37,35 @@ namespace PatientApp.Gui
             });
         }
 
+        public void setPhaseLabel(string currentPhase)
+        {
+            this.ActionInvoke(() =>
+            {
+                faseLabel.Text = currentPhase;
+            });
+        }
+
+        public void setHeartbeatLabel(string currentHeartbeat)
+        {
+            this.ActionInvoke(() =>
+            {
+                currentHearbeatLabel.Text = currentHeartbeat;
+            });
+        }
+
         private void PatientTestInstructions_Load(object sender, EventArgs e)
         {
 
         }
 
+        private void faseLabel_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void currentHearbeatLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
