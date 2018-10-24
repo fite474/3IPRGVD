@@ -27,13 +27,18 @@ namespace DoctorApp
             byte[] data = new byte[1024];
             Client = new TcpClient(IPAddress.Loopback.ToString(), 667);
             stream = Client.GetStream();
-            byte[] messageBytes = Util.BuildJSON(data);
+            //byte[] messageBytes = Util.BuildJSON(data);
             //stream.Write(messageBytes, 0, messageBytes.Length);
-
+        
         
             ReadThread = new Thread(RecieveServerData);
             ReadThread.Start();
 
+        }
+
+        private void SendData(SessionSnapshot snapshot)
+        {
+            byte[] messageBytes = Ut
         }
 
         private void RecieveServerData()

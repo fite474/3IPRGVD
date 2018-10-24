@@ -35,30 +35,34 @@
             // timeLabel
             // 
             this.timeLabel.AutoSize = true;
-            this.timeLabel.Location = new System.Drawing.Point(565, 54);
+            this.timeLabel.Location = new System.Drawing.Point(753, 66);
+            this.timeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(35, 13);
+            this.timeLabel.Size = new System.Drawing.Size(46, 17);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "label1";
             // 
             // instructionLabelRPM
             // 
             this.instructionLabelRPM.AutoSize = true;
-            this.instructionLabelRPM.Location = new System.Drawing.Point(160, 72);
+            this.instructionLabelRPM.Location = new System.Drawing.Point(213, 89);
+            this.instructionLabelRPM.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.instructionLabelRPM.Name = "instructionLabelRPM";
-            this.instructionLabelRPM.Size = new System.Drawing.Size(35, 13);
+            this.instructionLabelRPM.Size = new System.Drawing.Size(46, 17);
             this.instructionLabelRPM.TabIndex = 1;
             this.instructionLabelRPM.Text = "label1";
             // 
             // PatientTestInstructions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1067, 554);
             this.Controls.Add(this.instructionLabelRPM);
             this.Controls.Add(this.timeLabel);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "PatientTestInstructions";
             this.Text = "PatientTestInstructions";
+            this.Load += new System.EventHandler(this.PatientTestInstructions_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

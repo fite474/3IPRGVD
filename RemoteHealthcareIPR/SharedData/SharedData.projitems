@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonNewClientSnapshot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonRequestNewClientData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Json\JsonResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServerConnection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util.cs" />
   </ItemGroup>
 </Project>

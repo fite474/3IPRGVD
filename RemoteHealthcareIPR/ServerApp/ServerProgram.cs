@@ -59,6 +59,8 @@ namespace ServerApp
                 TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
                 allDone.Set();
             }
+
+
             else {
                 client = server.EndAcceptTcpClient(ar);
                 TypeCheckTask check = new TypeCheckTask(client, currentUsers, serverData);

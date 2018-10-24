@@ -19,6 +19,7 @@ namespace PatientApp.Gui
         private BikeConnection bikeConnection;
         public string Age { get; set; }
         public string Weight { get; set; }
+        public string Doctor { get; set; }
 
 
         public PatientTestStart(BikeConnection bikeConnection)
@@ -41,7 +42,7 @@ namespace PatientApp.Gui
             bikeConnection.Weight = Weight;
 
             new Thread(bikeConnection.RunTestGUI).Start();
-            new Thread(bikeConnection.RunBikeLoop).Start();
+            
             
             
         }
@@ -54,6 +55,11 @@ namespace PatientApp.Gui
         private void weightTextbox_TextChanged(object sender, EventArgs e)
         {
             Weight = weightTextbox.Text;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            Doctor = textBox1.Text;
         }
     }
 }

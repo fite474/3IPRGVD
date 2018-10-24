@@ -87,6 +87,7 @@ namespace PatientApp.Bike
 
         public void RunTestGUI(object o)
         {
+
             //patientTestInstructions = new PatientTestInstructions();
             patientTestInstructions.ShowDialog();
         }

@@ -1,4 +1,6 @@
-﻿using SharedData.Helpers;
+﻿using DoctorApp;
+using SharedData.Data;
+using SharedData.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +19,8 @@ namespace PatientApp.Gui
     {
         public PatientTestInstructions()
         {
+            ServerConnection connection = new ServerConnection();
+            connection.OnReceiveResponse += handleResponse;
             InitializeComponent();
         }
 
@@ -33,6 +37,16 @@ namespace PatientApp.Gui
             {
                 instructionLabelRPM.Text = instructions;
             });
+        }
+
+        private void PatientTestInstructions_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        public void handleResponse(SessionSnapshot snap)
+        {
+            //recievedata and start if correct
         }
     }
 }
