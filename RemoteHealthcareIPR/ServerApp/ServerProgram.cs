@@ -42,10 +42,11 @@ namespace ServerApp
                 server.Start();
                 while (true)
                 {
-
-                    server.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-                    allDone.WaitOne();
-                    Console.WriteLine("Client has connected");
+                    TcpClient tcpClient = server.AcceptTcpClient();
+                    Task receiveServerData = new Task(() => ReceiveServerData(tcpClient));
+                    //server.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+                    //allDone.WaitOne();♦
+                    //Console.WriteLine("Client has connected");
                 }
             }
             catch (Exception e)
@@ -56,16 +57,16 @@ namespace ServerApp
 
         private void OnConnect(IAsyncResult ar)
         {
-                doctor = server.EndAcceptTcpClient(ar);
-                TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
-                allDone.Set();
+                //doctor = server.EndAcceptTcpClient(ar);
+                //TypeCheckTask check = new TypeCheckTask(doctor, currentUsers, serverData);
+                //allDone.Set();
         }
 
-        private void RecieveServerData()
+        private void ReceiveServerData(TcpClient tcp)
         {
             while (true)
             {
-                Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(doctor));
+                Datagram receivedData = JsonConvert.DeserializeObject<Datagram>(Util.ReadMessage(tcp));
                 Console.WriteLine(receivedData);
             }
         }
