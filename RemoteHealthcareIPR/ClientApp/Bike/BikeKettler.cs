@@ -50,8 +50,8 @@ namespace PatientApp.Bike
 
         public void PutPower(int power)
         {
-            comPort.WriteLine("rs");
-            comPort.WriteLine("cd");
+            //comPort.WriteLine("rs");
+            //comPort.WriteLine("cd");
             comPort.WriteLine("pw " + power);
         }
 

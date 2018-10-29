@@ -14,7 +14,7 @@ namespace PatientApp.Bike
             SessionSnapshot snapshot = new SessionSnapshot();
 
             string[] values = valueString.Split('\t');
-
+            
             snapshot.HeartRate = int.Parse(values[0]);
             snapshot.Rpm = int.Parse(values[1]);
             snapshot.Speed = int.Parse(values[2]);

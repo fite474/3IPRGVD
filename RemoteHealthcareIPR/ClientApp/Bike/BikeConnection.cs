@@ -35,7 +35,7 @@ namespace PatientApp.Bike
         private int timeMinutes = 7;
         private int timeSeconds = 0;
         //private Session Session { get; }
-        private readonly int speed = 100;
+        private readonly int speed = 1000;
         public string Age { get; set; }
         public string Weight { get; set; }
         public string Gender { get; set; }
@@ -126,12 +126,12 @@ namespace PatientApp.Bike
             setPhase("Astrand test");
             while (timeMinutes >= 1)
             {
-                if (heartbeat < 130)
+                if (heartbeat < 100 && power < 400)
                 { power += 5;
                     patientTestInstructions.setPower("current Power is: " + power + "Watt");
 
                 }
-                else if (heartbeat > maxHeartFrequentie)
+                else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40)
                 { power -= 5;
                     patientTestInstructions.setPower("current Power is: " + power + "Watt");
                 }
@@ -153,7 +153,7 @@ namespace PatientApp.Bike
             bikeTask.IncreasePower(currentPower);
             heartbeat = currentBikeData.HeartRate;
 
-            
+            Console.WriteLine("heartbeat is: "+ heartbeat);
 
             roundsPerMin = currentBikeData.Rpm;
 
@@ -165,32 +165,32 @@ namespace PatientApp.Bike
                     SessionSnapshot ss = new SessionSnapshot();
                     ss.CurrentPower = currentPower;
                     ss.Time = time;
-                    ss.HeartRate = heartbeat;
+                    ss.HeartRate = currentBikeData.HeartRate;
                     ss.Rpm = currentBikeData.Rpm;
                     ss.Speed = currentBikeData.Speed;
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
                     //maak gemiddelde van heartbeat
                     MakeAvarageHeartbeat(heartbeat);
-                    SendSnap(ss);
+                    //SendSnap(ss);
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
             else
             {
-                if (timeSeconds == 0)
-                {
+                //if (timeSeconds == 0)
+                //{
                     SessionSnapshot ss = new SessionSnapshot();
                     ss.CurrentPower = currentPower;
                     ss.Time = time;
-                    ss.HeartRate = heartbeat;
+                    ss.HeartRate = currentBikeData.HeartRate;
                     ss.Rpm = currentBikeData.Rpm;
                     ss.Speed = currentBikeData.Speed;
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
                     SendSnap(ss);
                     //Session.SessionSnapshots.Add(ss);
-                }
+                //}
             }
 
             if (timeSeconds == 0)
@@ -205,7 +205,7 @@ namespace PatientApp.Bike
                 //stop programma
             }
 
-           
+            //SendSnap(ss);
             setGUILabels(roundsPerMin);
             Thread.Sleep(speed);
 
@@ -275,7 +275,7 @@ namespace PatientApp.Bike
             patientTestInstructions.setHeartbeatLabel("current heartbeat is: " + heartbeat + "RPM");
 
             patientTestInstructions.setSteadyStateLabel(steadyState);
-
+            Console.WriteLine("rpm: "+rpm);
         }
 
 
