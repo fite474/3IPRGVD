@@ -112,31 +112,53 @@ namespace PatientApp.Bike
 
 
 
-            power = 40;
+            power = 25;
             patientTestInstructions.setPower("current Power is: " + power + "Watt");
             setPhase("warming up");
+            DateTime startTime = DateTime.Now;
+            bool wait = false;
             while (timeMinutes >= 5)
             {
-                if (roundsPerMin < 50)
-                { power -= 5; }
-                if (roundsPerMin > 60)
-                { power += 5; }
+                DateTime currentTime = DateTime.Now;
+                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 || !wait)
+                {
+                    wait = false;
+                    if (roundsPerMin < 50 && power > 25)
+                    { power -= 5; wait = true; }
+
+                    if (roundsPerMin > 60 && power < 400)
+                    { power += 5; wait = true; }
+                    startTime = DateTime.Now;
+                }
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                
             }
             setPhase("Astrand test");
+            startTime = DateTime.Now;
+            wait = false;
             while (timeMinutes >= 1)
             {
-                if (heartbeat < 100 && power < 400)
-                { power += 5;
-                    patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                DateTime currentTime = DateTime.Now;
+                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 || !wait)
+                {
+                    if (heartbeat < 100 && power < 400)
+                    {
+                        power += 5;
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                        wait = true;
+                    }
+                    else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
+                    {
+                        power -= 5;
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                        wait = true;
+                    }
+                    startTime = DateTime.Now;
+
 
                 }
-                else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40)
-                { power -= 5;
-                    patientTestInstructions.setPower("current Power is: " + power + "Watt");
-                }
-
-                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                    CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                
             }
             setPhase("cooling down");
             while (timeMinutes >= 0)
