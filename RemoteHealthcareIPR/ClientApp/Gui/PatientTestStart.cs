@@ -20,6 +20,7 @@ namespace PatientApp.Gui
         public string Age { get; set; }
         public string Weight { get; set; }
         public string Doctor { get; set; }
+        public string Gender{ get; set; }
 
 
         public PatientTestStart(BikeConnection bikeConnection)
@@ -38,8 +39,10 @@ namespace PatientApp.Gui
 
         private void startTestButton_Click(object sender, EventArgs e)
         {
+           
             bikeConnection.Age = Age;
             bikeConnection.Weight = Weight;
+            bikeConnection.Gender = Gender;
             this.Hide();
             
             new Thread(bikeConnection.RunTestGUI).Start();
@@ -62,5 +65,7 @@ namespace PatientApp.Gui
         {
             Doctor = textBox1.Text;
         }
+
+        
     }
 }

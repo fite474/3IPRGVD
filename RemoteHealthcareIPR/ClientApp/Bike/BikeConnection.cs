@@ -40,7 +40,7 @@ namespace PatientApp.Bike
         public string Weight { get; set; }
         public string Gender { get; set; }
         private int power;
-        private int heartbeat = 0;
+
         private double maxHeartFrequentie = 200.0;
         private int roundsPerMin = 0;
         private ServerConnection connection;
@@ -112,6 +112,7 @@ namespace PatientApp.Bike
 
 
 
+
             power = 25;
             patientTestInstructions.setPower("current Power is: " + power + "Watt");
             setPhase("warming up");
@@ -120,7 +121,7 @@ namespace PatientApp.Bike
             while (timeMinutes >= 5)
             {
                 DateTime currentTime = DateTime.Now;
-                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 || !wait)
+                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 1 )//|| !wait)
                 {
                     wait = false;
                     if (roundsPerMin < 50 && power > 25)
@@ -129,31 +130,35 @@ namespace PatientApp.Bike
                     if (roundsPerMin > 60 && power < 400)
                     { power += 5; wait = true; }
                     startTime = DateTime.Now;
+
+
+                    CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
                 }
-                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                //CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
                 
             }
+            
             setPhase("Astrand test");
             startTime = DateTime.Now;
             wait = false;
             while (timeMinutes >= 1)
             {
                 DateTime currentTime = DateTime.Now;
-                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 || !wait)
+                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 )//|| !wait)
                 {
-                    if (heartbeat < 100 && power < 400)
-                    {
-                        power += 5;
-                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
-                        wait = true;
-                    }
-                    else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
-                    {
-                        power -= 5;
-                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
-                        wait = true;
-                    }
-                    startTime = DateTime.Now;
+                    //if (heartbeat < 100 && power < 400)
+                    //{
+                    //    power += 5;
+                    //    patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                    //    wait = true;
+                    //}
+                    //else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
+                    //{
+                    //    power -= 5;
+                    //    patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                    //    wait = true;
+                    //}
+                    //startTime = DateTime.Now;
 
 
                 }
@@ -166,6 +171,8 @@ namespace PatientApp.Bike
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
             setPhase("done");
+            int heartbeatAvr = (int)heartbeatList.Average();
+            CalculateVO2Max(heartbeatAvr);
         }
 
         public void CycleRun(int currentPower, string time)//int heartbeat, int currentPower, string time)
@@ -173,13 +180,13 @@ namespace PatientApp.Bike
             SessionSnapshot currentBikeData = bikeTask.GetBikeData();
             bool secondsIsZero = timeSeconds == 0;
             bikeTask.IncreasePower(currentPower);
-            heartbeat = currentBikeData.HeartRate;
+            //heartbeat = currentBikeData.HeartRate;
 
-            Console.WriteLine("heartbeat is: "+ heartbeat);
+           // Console.WriteLine("heartbeat is: "+ heartbeat);
 
             roundsPerMin = currentBikeData.Rpm;
 
-            if (timeMinutes < 2)
+            if (timeMinutes < 8)//2)
             {
                 patientTestInstructions.setHeartbeatLabelvisible();
                 if (timeSeconds % 15 == 0)
@@ -193,8 +200,9 @@ namespace PatientApp.Bike
                     ss.Distance = currentBikeData.Distance;
                     ss.Energy = currentBikeData.Energy;
                     //maak gemiddelde van heartbeat
-                    MakeAvarageHeartbeat(heartbeat);
-                    //SendSnap(ss);
+                    MakeAvarageHeartbeat(currentBikeData.HeartRate);
+                    //MakeAvarageHeartbeat(heartbeat);
+                    SendSnap(ss);
                     //Session.SessionSnapshots.Add(ss);
                 }
             }
@@ -220,15 +228,16 @@ namespace PatientApp.Bike
                 timeSeconds = 59;
                 timeMinutes--;
             }
-            else timeSeconds--;
+            else timeSeconds--;//else timeSeconds-=10;
+            Console.WriteLine("timeSeconds: " + timeSeconds);
 
-            if (heartbeat > maxHeartFrequentie)
+            if (currentBikeData.HeartRate > maxHeartFrequentie)//heartbeat > maxHeartFrequentie)
             {
                 //stop programma
             }
 
             //SendSnap(ss);
-            setGUILabels(roundsPerMin);
+            setGUILabels(currentBikeData.Rpm, currentBikeData.HeartRate);//roundsPerMin, currentBikeData.HeartRate);
             Thread.Sleep(speed);
 
         }
@@ -255,6 +264,7 @@ namespace PatientApp.Bike
 
         private void SetMaxHF(string age)
         {
+            
             double localAge = int.Parse(age);
             double hfFactor = 1.0;
             if (localAge < 25)
@@ -285,16 +295,17 @@ namespace PatientApp.Bike
             patientTestInstructions.setPhaseLabel(phase);
         }
 
-        private void setGUILabels(int rpm)
+        private void setGUILabels(int rpm, int heartbeat)
         {
             if (rpm < 50)
-            { patientTestInstructions.setInstructionLabel("fiets sneller"); }
+            { patientTestInstructions.setInstructionLabel("fiets sneller " + rpm); }
             else if (rpm > 65)
-            { patientTestInstructions.setInstructionLabel("fiets rustiger"); }
+            { patientTestInstructions.setInstructionLabel("fiets rustiger " + rpm); }
             else
-            { patientTestInstructions.setInstructionLabel("goed bezig, houd dit tempo aan"); }
+            { patientTestInstructions.setInstructionLabel("goed bezig, houd dit tempo aan " + rpm); }
 
-            patientTestInstructions.setHeartbeatLabel("current heartbeat is: " + heartbeat + "RPM");
+            patientTestInstructions.setHeartbeatLabel("current heartbeat is: " + heartbeat + "");
+            //patientTestInstructions.set
 
             patientTestInstructions.setSteadyStateLabel(steadyState);
             Console.WriteLine("rpm: "+rpm);
@@ -336,9 +347,29 @@ namespace PatientApp.Bike
             patientTestInstructions.ShowDialog();
         }
 
+
+
+        private double CalculateVO2Max(int averageHeartRate)
+        {
+            int tempGend = 1;
+            //if (Gender.Equals("Male"))
+            //{
+            //    //tempGend = 1;
+            //    Console.WriteLine("Male:    dsaddsda");
+            //}
+            double vo2 = (1.8 * averageHeartRate) / int.Parse(Weight);
+            double vo2Max = vo2 * ((220 - int.Parse(Age) - 73 - (tempGend * 10)) / (averageHeartRate - 73 - (tempGend * 10)));
+            Console.WriteLine("VO2Max clc: " + vo2Max);
+            return vo2Max;
+
+        }
+
         private void MakeAvarageHeartbeat(int heartbeat)
         {
-            heartbeatList.Add(heartbeat);
+            if (heartbeat > 5)
+            {
+                heartbeatList.Add(heartbeat);
+            }
             if (heartbeatList.Count > 2)
             {
                 int maxValue = 0;
@@ -349,6 +380,7 @@ namespace PatientApp.Bike
                     { maxValue = ritme; }
                     if (ritme < minValue)
                     { minValue = ritme; }
+                    
                 }
 
                 if ((maxValue - minValue) > 5)

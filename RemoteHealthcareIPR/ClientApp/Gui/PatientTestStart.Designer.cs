@@ -79,6 +79,7 @@
             this.genderComboBox.Name = "genderComboBox";
             this.genderComboBox.Size = new System.Drawing.Size(160, 24);
             this.genderComboBox.TabIndex = 3;
+            
             // 
             // label1
             // 
