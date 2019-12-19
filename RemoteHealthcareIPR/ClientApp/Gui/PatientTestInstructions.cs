@@ -20,7 +20,8 @@ namespace PatientApp.Gui
         public PatientTestInstructions()
         {
             InitializeComponent();
-            instrucitonsLabel.Text = "U gaat fietsen met een snelheid van ongeveer 60 omwentelingen per min.\n U krijgt eerst een korte warming-up van 2 min.\n Hierna wordt (eventueel in korte stappen) de beoogde testbelasting ingesteld.\n De test duurt 4 minuten met daarna een cooling down. ";
+            instrucitonsLabel.Text = "U gaat fietsen met een snelheid van ongeveer 60 omwentelingen per min.\nU krijgt eerst een korte warming-up van 2 min.\nHierna wordt (eventueel in korte stappen) de beoogde testbelasting ingesteld.\nDe test duurt 4 minuten met daarna een cooling down. ";
+            label2.Text = "VO2Max wordt berekent.";
         }
 
         public void setTimeLabel(string time) {
@@ -42,6 +43,7 @@ namespace PatientApp.Gui
         {
             this.ActionInvoke(() =>
             {
+                
                 faseLabel.Text = currentPhase;
             });
         }
@@ -81,6 +83,14 @@ namespace PatientApp.Gui
             });
         }
 
+        public void setvo2MaxLabel(string vo2Max)
+        {
+            this.ActionInvoke(() =>
+            {
+                label2.Text = vo2Max;
+            });
+        }
+
         private void PatientTestInstructions_Load(object sender, EventArgs e)
         {
 
@@ -102,6 +112,11 @@ namespace PatientApp.Gui
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }

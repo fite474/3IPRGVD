@@ -66,6 +66,11 @@ namespace PatientApp.Gui
             Doctor = textBox1.Text;
         }
 
-        
+        private void genderComboBox_TextChanged(object sender, EventArgs e)
+        {
+            Gender = genderComboBox.Text;
+        }
+
+
     }
 }

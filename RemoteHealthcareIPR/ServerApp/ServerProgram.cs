@@ -5,6 +5,7 @@ using SharedData.Data;
 using SharedData.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -63,6 +64,54 @@ namespace ServerApp
             //allDone.Set();
         }
 
+        public static void VerifyDir(string path)
+        {
+            try
+            {
+                DirectoryInfo dir = new DirectoryInfo(path);
+                if (!dir.Exists)
+                {
+                    dir.Create();
+                }
+            }
+            catch { }
+        }
+
+        public static void Logger(dynamic receivedData)
+        {
+            string lines = JsonConvert.SerializeObject(receivedData, Formatting.Indented);
+
+            //dynamic array = JsonConvert.DeserializeObject<List<Session>>(lines);
+
+
+
+            string path = $"ClientDataLogs/";//"C:/IPR_LOG/";
+            VerifyDir(path);
+            string fileName = "Astrand_Test_" +
+                DateTime.Now.Day.ToString() + "_" +
+                DateTime.Now.Month.ToString() + "_" +
+                DateTime.Now.Year.ToString() + "_" +
+                DateTime.Now.Hour.ToString() + "_" +
+                DateTime.Now.Minute.ToString() + "_" +
+                DateTime.Now.Second.ToString() + 
+                "_Logs.txt";
+            try
+            {
+                System.IO.StreamWriter file = new System.IO.StreamWriter(path + fileName, true);
+                file.WriteLine(DateTime.Now.ToString() + ": " + lines);
+
+                //using (var writer = new StreamWriter(path + fileName))
+                //{
+                //    writer.Write(lines);
+
+                //}
+
+
+                file.Close();
+            }
+            catch (Exception) { }
+        }
+
         private void ReceiveServerData(TcpClient tcp)
         {
             while (true)
@@ -90,6 +139,11 @@ namespace ServerApp
                     case DataType.ImDoc:
                         {
                             doctor = tcp;
+                            break;
+                        }
+                    case DataType.LogData:
+                        {
+                            Logger(receivedData);
                             break;
                         }
                 }

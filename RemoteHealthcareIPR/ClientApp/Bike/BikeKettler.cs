@@ -10,12 +10,16 @@ namespace PatientApp.Bike
 {
     class BikeKettler : IBike
     {
+        private string oldStringData;
         private SerialPort comPort;
         public BikeKettler(string port)
         {
             comPort = new SerialPort(port);
             comPort.Handshake = Handshake.XOnXOff;
             comPort.Open();
+
+            comPort.WriteLine("rs");
+            comPort.WriteLine("cm");
 
         }
 
@@ -33,10 +37,44 @@ namespace PatientApp.Bike
         {
             comPort.WriteLine("st");
             string stringData = comPort.ReadLine();
-            Console.WriteLine(stringData);
+            Console.WriteLine("---------------------------------"+stringData);
             if (stringData.Contains("ERROR"))
                 return null;
+            if (stringData.Contains("ACK"))
+            {
+                if (oldStringData != null)
+                {
+                    return BikeDataHelper.AssignValues(oldStringData, 0);
+                    comPort.WriteLine("st");
+                    stringData = comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    Console.WriteLine("recalculated" + stringData);
+                    //Console.WriteLine("retry");
+                }
+                else
+                {
+                    Console.WriteLine("null");
+                    return null;
+                }
+            }
 
+            if (stringData.Contains("RUN"))
+            {
+                if (oldStringData != null)
+                {
+                    comPort.WriteLine("st");
+                    stringData = comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    Console.WriteLine("recalculated" + stringData); //return ReadData();//return BikeDataHelper.AssignValues(oldStringData, 0);
+                    
+                    //Console.WriteLine("retry");
+                }
+                else
+                {
+                    Console.WriteLine("null");
+                    return null;
+                }
+            }
+            Console.WriteLine(DateTime.Now.Second);
+            oldStringData = stringData;
             return BikeDataHelper.AssignValues(stringData, 0);
 
         }
@@ -51,7 +89,7 @@ namespace PatientApp.Bike
         public void PutPower(int power)
         {
             //comPort.WriteLine("rs");
-            //comPort.WriteLine("cd");
+            comPort.WriteLine("cm");
             comPort.WriteLine("pw " + power);
         }
 

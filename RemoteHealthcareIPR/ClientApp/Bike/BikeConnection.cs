@@ -34,7 +34,7 @@ namespace PatientApp.Bike
         private long loopInterval = 1000; //In milliseconds
         private int timeMinutes = 7;
         private int timeSeconds = 0;
-        //private Session Session { get; }
+        private Session thisSession;
         private readonly int speed = 1000;
         public string Age { get; set; }
         public string Weight { get; set; }
@@ -47,7 +47,8 @@ namespace PatientApp.Bike
         public string CurrentTimeString { get; set; }
         PatientTestInstructions patientTestInstructions = new PatientTestInstructions();
         private bool steadyState = true;
-
+        //private SessionSnapshot currentData;
+        //private IBike bike;
         public BikeConnection()
         {
         }
@@ -93,7 +94,7 @@ namespace PatientApp.Bike
 
         public void RunTestGUI(object o)
         {
-            
+
             
             connection = new ServerConnection(false);
             connection.OnReceiveResponse += ResponseHandler;
@@ -110,54 +111,67 @@ namespace PatientApp.Bike
             heartbeatList = new List<int>();
             SetMaxHF(Age);
 
-
-
+            thisSession = new Session(DateTime.Now);
+            PatientData c1 = new PatientData("doctor doc", "1", "yeut", new List<Session>());
+            thisSession.PatientData = c1;
+            thisSession.SessionEnd = DateTime.Now.AddMinutes(7.0);
 
             power = 25;
-            patientTestInstructions.setPower("current Power is: " + power + "Watt");
-            setPhase("warming up");
+            patientTestInstructions.setPower("Current Power is: " + power + "Wattt");
+            setPhase("Warming up");
             DateTime startTime = DateTime.Now;
-            bool wait = false;
-            while (timeMinutes >= 5)
+            //bool wait = false;
+            while (timeMinutes >= 6)//5)
             {
-                DateTime currentTime = DateTime.Now;
-                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 1 )//|| !wait)
+                //DateTime currentTime = DateTime.Now;
+                if (timeSeconds % 5 == 0)//((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 1 )//|| !wait)
                 {
-                    wait = false;
+                    
                     if (roundsPerMin < 50 && power > 25)
-                    { power -= 5; wait = true; }
+                    {
+                        power -= 5;
+                        bikeTask.IncreasePower(power);
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                    }
 
-                    if (roundsPerMin > 60 && power < 400)
-                    { power += 5; wait = true; }
-                    startTime = DateTime.Now;
+                    else if (roundsPerMin > 60 && power < 400)
+                    {
+                        power += 5;
+                        bikeTask.IncreasePower(power);
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                    }
+                    
 
 
-                    CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                    //CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
                 }
-                //CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
+                CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
                 
             }
-            
+
+            //SendLogFile(thisSession);
             setPhase("Astrand test");
-            startTime = DateTime.Now;
-            wait = false;
+            //startTime = DateTime.Now;
+           // wait = false;
             while (timeMinutes >= 1)
             {
-                DateTime currentTime = DateTime.Now;
-                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 )//|| !wait)
+                //DateTime currentTime = DateTime.Now;
+                if (timeSeconds % 5 == 0)//if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 5 )//|| !wait)
                 {
-                    //if (heartbeat < 100 && power < 400)
-                    //{
-                    //    power += 5;
-                    //    patientTestInstructions.setPower("current Power is: " + power + "Watt");
-                    //    wait = true;
-                    //}
-                    //else if (heartbeat > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
-                    //{
-                    //    power -= 5;
-                    //    patientTestInstructions.setPower("current Power is: " + power + "Watt");
-                    //    wait = true;
-                    //}
+                    if (bikeTask.GetBikeData().HeartRate < 100 && power < 400)
+                    {
+                        power += 5;
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                        bikeTask.IncreasePower(power);
+                        // wait = true;
+                    }
+                    else if (bikeTask.GetBikeData().HeartRate > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
+                    {
+                        power -= 5;
+                        patientTestInstructions.setPower("current Power is: " + power + "Watt");
+                        bikeTask.IncreasePower(power);
+                        // wait = true;
+                    }
                     //startTime = DateTime.Now;
 
 
@@ -165,21 +179,22 @@ namespace PatientApp.Bike
                     CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
                 
             }
-            setPhase("cooling down");
+            setPhase("Cooling down");
             while (timeMinutes >= 0)
             {
                 CycleRun(power, ConvertTimeToString(timeMinutes, timeSeconds));
             }
-            setPhase("done");
+            setPhase("Done");
             int heartbeatAvr = (int)heartbeatList.Average();
             CalculateVO2Max(heartbeatAvr);
+            SendLogFile(thisSession);
         }
 
         public void CycleRun(int currentPower, string time)//int heartbeat, int currentPower, string time)
         {
             SessionSnapshot currentBikeData = bikeTask.GetBikeData();
             bool secondsIsZero = timeSeconds == 0;
-            bikeTask.IncreasePower(currentPower);
+            //bikeTask.IncreasePower(currentPower);
             //heartbeat = currentBikeData.HeartRate;
 
            // Console.WriteLine("heartbeat is: "+ heartbeat);
@@ -228,7 +243,7 @@ namespace PatientApp.Bike
                 timeSeconds = 59;
                 timeMinutes--;
             }
-            else timeSeconds--;//else timeSeconds-=10;
+            else timeSeconds -= 1;//else timeSeconds--;//else timeSeconds-=10;
             Console.WriteLine("timeSeconds: " + timeSeconds);
 
             if (currentBikeData.HeartRate > maxHeartFrequentie)//heartbeat > maxHeartFrequentie)
@@ -238,7 +253,24 @@ namespace PatientApp.Bike
 
             //SendSnap(ss);
             setGUILabels(currentBikeData.Rpm, currentBikeData.HeartRate);//roundsPerMin, currentBikeData.HeartRate);
-            Thread.Sleep(speed);
+
+
+            DateTime startTime = DateTime.Now;
+            SessionSnapshot oldData = currentBikeData;
+            bool waitForData = true;
+            while (waitForData)
+            {
+                //DateTime currentTime = DateTime.Now;
+                //if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 1)
+                //{
+                    //startTime = currentTime;
+                    currentBikeData = bikeTask.GetBikeData();
+
+                    if (oldData != currentBikeData)
+                    waitForData = false;
+                //}
+            }
+            // Thread.Sleep(speed);
 
         }
 
@@ -247,8 +279,17 @@ namespace PatientApp.Bike
             Datagram datagram = new Datagram();
             datagram.DataType = DataType.SessionSnapshot;
             datagram.Data = snap;
+            thisSession.SessionSnapshots.Add(snap);
             connection.SendData(datagram);
         }
+        private void SendLogFile(Session session)
+        {
+            Datagram datagram = new Datagram();
+            datagram.DataType = DataType.LogData;
+            datagram.Data = session;
+            connection.SendData(datagram);
+        }
+
         public string ConvertTimeToString(int minutes, int seconds)
         {
             CurrentTimeString = minutes.ToString("00") + ":" + seconds.ToString("00");
@@ -298,13 +339,13 @@ namespace PatientApp.Bike
         private void setGUILabels(int rpm, int heartbeat)
         {
             if (rpm < 50)
-            { patientTestInstructions.setInstructionLabel("fiets sneller " + rpm); }
+            { patientTestInstructions.setInstructionLabel("Fiets sneller " + rpm); }
             else if (rpm > 65)
-            { patientTestInstructions.setInstructionLabel("fiets rustiger " + rpm); }
+            { patientTestInstructions.setInstructionLabel("Fiets rustiger " + rpm); }
             else
-            { patientTestInstructions.setInstructionLabel("goed bezig, houd dit tempo aan " + rpm); }
+            { patientTestInstructions.setInstructionLabel("Goed bezig, houd dit tempo aan " + rpm); }
 
-            patientTestInstructions.setHeartbeatLabel("current heartbeat is: " + heartbeat + "");
+            patientTestInstructions.setHeartbeatLabel("Current heartbeat is: " + heartbeat + "");
             //patientTestInstructions.set
 
             patientTestInstructions.setSteadyStateLabel(steadyState);
@@ -351,15 +392,26 @@ namespace PatientApp.Bike
 
         private double CalculateVO2Max(int averageHeartRate)
         {
-            int tempGend = 1;
-            //if (Gender.Equals("Male"))
-            //{
-            //    //tempGend = 1;
-            //    Console.WriteLine("Male:    dsaddsda");
-            //}
+            int tempGend = 0;
+            if (Gender.Equals("Male"))
+            {tempGend = 1;}
+
+            if ((averageHeartRate - 73 - (tempGend * 10)) == 0)
+            {averageHeartRate += 1;}
+
             double vo2 = (1.8 * averageHeartRate) / int.Parse(Weight);
             double vo2Max = vo2 * ((220 - int.Parse(Age) - 73 - (tempGend * 10)) / (averageHeartRate - 73 - (tempGend * 10)));
             Console.WriteLine("VO2Max clc: " + vo2Max);
+            Math.Round(vo2Max, 2);
+            if (steadyState)
+            {
+                patientTestInstructions.setvo2MaxLabel("VO2Max: " + vo2Max + " L/min");
+            }
+            else
+            {
+                patientTestInstructions.setvo2MaxLabel("Geen steady state bereikt, VO2Max is niet betrouwbaar \nVO2Max: " + vo2Max + " L/min");
+            }
+            
             return vo2Max;
 
         }
@@ -373,7 +425,7 @@ namespace PatientApp.Bike
             if (heartbeatList.Count > 2)
             {
                 int maxValue = 0;
-                int minValue = 0;
+                int minValue = 200;
                 foreach (int ritme in heartbeatList)
                 {
                     if (ritme > maxValue)
@@ -383,7 +435,7 @@ namespace PatientApp.Bike
                     
                 }
 
-                if ((maxValue - minValue) > 5)
+                if ((maxValue - minValue) > 30)
                 {
                     steadyState = false;
                     
