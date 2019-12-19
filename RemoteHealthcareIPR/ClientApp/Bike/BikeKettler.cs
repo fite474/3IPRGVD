@@ -17,7 +17,7 @@ namespace PatientApp.Bike
             comPort = new SerialPort(port);
             comPort.Handshake = Handshake.XOnXOff;
             comPort.Open();
-
+            
             comPort.WriteLine("rs");
             comPort.WriteLine("cm");
 
@@ -44,9 +44,10 @@ namespace PatientApp.Bike
             {
                 if (oldStringData != null)
                 {
-                    return BikeDataHelper.AssignValues(oldStringData, 0);
-                    comPort.WriteLine("st");
-                    stringData = comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    //return BikeDataHelper.AssignValues(oldStringData, 0);
+                    //comPort.WriteLine("st");
+                    comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    stringData = comPort.ReadLine();
                     Console.WriteLine("recalculated" + stringData);
                     //Console.WriteLine("retry");
                 }
@@ -61,8 +62,10 @@ namespace PatientApp.Bike
             {
                 if (oldStringData != null)
                 {
-                    comPort.WriteLine("st");
-                    stringData = comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    //return BikeDataHelper.AssignValues(oldStringData, 0);
+                    //comPort.WriteLine("st");
+                    comPort.ReadLine();//return ReadData();// return BikeDataHelper.AssignValues(oldStringData, 0); 
+                    stringData = comPort.ReadLine();
                     Console.WriteLine("recalculated" + stringData); //return ReadData();//return BikeDataHelper.AssignValues(oldStringData, 0);
                     
                     //Console.WriteLine("retry");
@@ -91,6 +94,7 @@ namespace PatientApp.Bike
             //comPort.WriteLine("rs");
             comPort.WriteLine("cm");
             comPort.WriteLine("pw " + power);
+
         }
 
         public void PutTime(int time)

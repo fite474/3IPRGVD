@@ -134,7 +134,7 @@ namespace PatientApp.Bike
                         patientTestInstructions.setPower("current Power is: " + power + "Watt");
                     }
 
-                    else if (roundsPerMin > 60 && power < 400)
+                    else if (roundsPerMin > 70 && power < 400)
                     {
                         power += 5;
                         bikeTask.IncreasePower(power);
@@ -165,7 +165,7 @@ namespace PatientApp.Bike
                         bikeTask.IncreasePower(power);
                         // wait = true;
                     }
-                    else if (bikeTask.GetBikeData().HeartRate > maxHeartFrequentie || roundsPerMin < 40 && power > 25)
+                    else if (bikeTask.GetBikeData().HeartRate > maxHeartFrequentie || roundsPerMin < 50 && power > 25)
                     {
                         power -= 5;
                         patientTestInstructions.setPower("current Power is: " + power + "Watt");
@@ -340,7 +340,7 @@ namespace PatientApp.Bike
         {
             if (rpm < 50)
             { patientTestInstructions.setInstructionLabel("Fiets sneller " + rpm); }
-            else if (rpm > 65)
+            else if (rpm > 70)
             { patientTestInstructions.setInstructionLabel("Fiets rustiger " + rpm); }
             else
             { patientTestInstructions.setInstructionLabel("Goed bezig, houd dit tempo aan " + rpm); }

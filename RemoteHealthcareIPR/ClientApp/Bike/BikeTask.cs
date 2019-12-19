@@ -136,13 +136,17 @@ namespace PatientApp.Bike
             while (running)
             {
                 DateTime currentTime = DateTime.Now;
-                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 1)
+                if ((currentTime - startTime).Ticks / TimeSpan.TicksPerSecond >= 0.5)
                 {
                     startTime = currentTime;
                     currentData = bike.ReadData();
 
                     if (currentData == null)
                         continue;
+                    //if (currentData.)
+                    //{
+
+                    //}
 
                     OnBikeDataReceived?.Invoke(currentData);
                     if (bike is BikeSimulator)
